@@ -4,7 +4,7 @@
 Tasks: 
 
  Module                          
-  **Career Guidance** =          AI Chatbot (optional), Resume Upload, Choose Interests, View Career Paths, Internship Feeds 
+  **Career Guidance** =          AI Chatbot , Resume Upload, Choose Interests, View Career Paths, Internship Feeds 
   **Personal Task Manager** =     Create/Edit/Delete tasks, Set deadlines, Mark as complete, Reminder system                  
   **Campus Complaint Box**  =    File complaints anonymously.                   
   **Gamification**, **Leaderboard**  =              Attend events or contests, Information about every events and clubs.           
