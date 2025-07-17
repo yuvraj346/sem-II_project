@@ -67,7 +67,7 @@ public class SubmissionBox {
 }
 
 /**
- before running the program make sure to create a database name complaint
+ before running the program make sure to create a database name taskmanager
  and then first run this program as run.java to create the table in that
  database :
  
