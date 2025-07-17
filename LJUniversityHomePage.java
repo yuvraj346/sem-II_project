@@ -1,163 +1,276 @@
+package ui;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import ui.TaskManagerUI;
 
-public class LJUniversityHomePage {
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LJUniversityHomePage().createUI());
-    }
+public final class HomePageSwing {
 
-    public void createUI() {
-        JFrame frame = new JFrame("LJ University - Home");
+    // Enhanced color palette - Cool modern theme
+    private static final Color BLUE_DARK = new Color(25, 118, 210);
+    private static final Color BLUE_LIGHT = new Color(66, 165, 245);
+    private static final Color BLUE_ACCENT = new Color(3, 169, 244);
+    private static final Color WHITE = Color.WHITE;
+    private static final Color BG_LIGHT = new Color(248, 250, 252);
+    private static final Color BG_DARKER = new Color(240, 242, 245);
+    private static final Color SHADOW = new Color(0, 0, 0, 30);
+
+    public static void show() {
+        // Create main frame
+        JFrame frame = new JFrame("LJ University - Student Companion");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 800);
-        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setLayout(new BorderLayout());
 
-        // ----- HEADER PANEL -----
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(new Color(24, 61, 89));
-        header.setPreferredSize(new Dimension(1000, 60));
-
-        JLabel uniName = new JLabel("LJ University");
-        uniName.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        uniName.setForeground(Color.WHITE);
-        uniName.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 0));
-
-        // LJ Logo with scaling
-        ImageIcon rawLogo = new ImageIcon("C:/Users/YUVRAJ/IdeaProjects/lj companion/src/img.png"); // Replace with actual image path
-        Image scaledImage = rawLogo.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-        ImageIcon logoIcon = new ImageIcon(scaledImage);
-        JLabel logoLabel = new JLabel();
-        logoLabel.setIcon(logoIcon);
-        logoLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 20));
-
-        header.add(uniName, BorderLayout.WEST);
-        header.add(logoLabel, BorderLayout.EAST);
-
-        // ----- MAIN PANEL -----
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(Color.WHITE);
-
-        // Hero Section with Image Background
-        JPanel heroPanel = new JPanel() {
-            private Image backgroundImage = new ImageIcon("C:/Users/YUVRAJ/IdeaProjects/lj companion/src/bg4.jpg").getImage(); // Replace with actual image path
-
+        // ================= HEADER =================
+        JPanel header = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setPaint(new GradientPaint(0, 0, BLUE_DARK, getWidth(), 0, BLUE_LIGHT));
+                g2.fillRect(0, 0, getWidth(), getHeight());
                 super.paintComponent(g);
-                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                g2.dispose();
             }
         };
-        heroPanel.setPreferredSize(new Dimension(1000, 200));
-        heroPanel.setLayout(new BorderLayout());
-        heroPanel.setOpaque(false);
+        header.setPreferredSize(new Dimension(0, 80));
+        header.setOpaque(false);
+        header.setBorder(new EmptyBorder(15, 30, 15, 30));
 
-        JLabel heroText = new JLabel("  EDUCATION IS THE BEST KEY SUCCESS IN LIFE");
-        heroText.setForeground(Color.WHITE);
-        heroText.setFont(new Font("Arial", Font.BOLD, 20));
-        heroText.setBorder(BorderFactory.createEmptyBorder(40, 30, 10, 10));
+        // University title - Simple as requested
+        JLabel title = new JLabel("LJ University");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        title.setForeground(WHITE);
 
-        JButton learnMore = new JButton("Learn More");
-        learnMore.setFocusPainted(false);
-        learnMore.setBackground(new Color(255, 111, 0));
-        learnMore.setForeground(Color.WHITE);
-        learnMore.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        learnMore.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        // Logo placeholder
+        ImageIcon logoIcon = new ImageIcon("C:/Users/YUVRAJ/IdeaProjects/lj companion/src/img.png"); // Replace with your logo path
+        Image img = logoIcon.getImage();
+        Image newImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        JLabel logo = new JLabel(new ImageIcon(newImg));
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
 
-        heroPanel.add(heroText, BorderLayout.NORTH);
-        heroPanel.add(learnMore, BorderLayout.SOUTH);
+        header.add(title, BorderLayout.WEST);
+        header.add(logo, BorderLayout.EAST);
+        frame.add(header, BorderLayout.NORTH);
 
-        // About Section
-        JPanel aboutPanel = new JPanel();
-        aboutPanel.setLayout(new BorderLayout());
-        aboutPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        aboutPanel.setBackground(Color.WHITE);
+        // ================= MAIN CONTENT WITH SCROLL =================
+        JPanel mainContent = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setPaint(new GradientPaint(0, 0, BG_LIGHT, getWidth(), getHeight(), BG_DARKER));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
+        mainContent.setOpaque(false);
 
-        JLabel aboutTitle = new JLabel("A Few Words About the University");
-        aboutTitle.setFont(new Font("Arial", Font.BOLD, 18));
-        aboutPanel.add(aboutTitle, BorderLayout.NORTH);
+        // ================= GREETING BANNER =================
+        JPanel greetingPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        JTextArea aboutText = new JTextArea("LJ University is a leading education group with modern infrastructure and skilled faculty. Students are encouraged to innovate, explore, and lead.");
-        aboutText.setLineWrap(true);
-        aboutText.setWrapStyleWord(true);
-        aboutText.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        aboutText.setEditable(false);
-        aboutText.setBackground(Color.WHITE);
+                // Shadow effect
+                g2.setColor(SHADOW);
+                g2.fillRoundRect(5, 5, getWidth()-10, getHeight()-10, 25, 25);
 
-        aboutPanel.add(aboutText, BorderLayout.CENTER);
+                // Main gradient
+                g2.setPaint(new GradientPaint(0, 0, new Color(25, 118, 210, 220), getWidth(), getHeight(), new Color(66, 165, 245, 220)));
+                g2.fillRoundRect(0, 0, getWidth()-5, getHeight()-5, 25, 25);
 
-        // New Info Buttons Section (after description)
-        JPanel infoButtons = new JPanel(new GridLayout(2, 3, 10, 10));
-        infoButtons.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        infoButtons.setBackground(Color.WHITE);
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        greetingPanel.setOpaque(false);
+        greetingPanel.setBorder(new EmptyBorder(40, 60, 40, 60));
+        greetingPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 200));
 
-        String[] infoOptions = {
-                "Education Service", "Apply for Admission", "Career Guidance",
-                "Task Manager", "Complaint Box", "Students & Results"
+        JLabel greeting = new JLabel("<html><center><h1>🚀 Welcome to LJ University!</h1><br>" +
+                "<h2>Your academic journey starts here</h2><br>" +
+                "Explore our comprehensive student services and make the most of your university experience</center></html>");
+        greeting.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        greeting.setForeground(WHITE);
+        greeting.setHorizontalAlignment(SwingConstants.CENTER);
+        greetingPanel.add(greeting, BorderLayout.CENTER);
+
+        mainContent.add(Box.createVerticalStrut(30));
+        mainContent.add(greetingPanel);
+        mainContent.add(Box.createVerticalStrut(30));
+
+        // ================= SHOUTOUT SECTION =================
+        JPanel shoutoutPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Shadow
+                g2.setColor(SHADOW);
+                g2.fillRoundRect(3, 3, getWidth()-6, getHeight()-6, 20, 20);
+
+                // Main panel
+                g2.setColor(WHITE);
+                g2.fillRoundRect(0, 0, getWidth()-3, getHeight()-3, 20, 20);
+
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        shoutoutPanel.setOpaque(false);
+        shoutoutPanel.setBorder(new EmptyBorder(25, 35, 25, 35));
+        shoutoutPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 140));
+
+        JLabel shoutoutTitle = new JLabel("🏆 Recent Winners & Achievements");
+        shoutoutTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        shoutoutTitle.setForeground(BLUE_DARK);
+
+        JLabel shoutoutContent = new JLabel("🎮 Gaming Champions: Team Phoenix | 📚 Academic Excellence: Sarah Johnson | 🏅 Sports Champions: Basketball Team Alpha");
+        shoutoutContent.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        shoutoutContent.setForeground(new Color(100, 100, 100));
+
+        shoutoutPanel.add(shoutoutTitle, BorderLayout.NORTH);
+        shoutoutPanel.add(shoutoutContent, BorderLayout.CENTER);
+
+        mainContent.add(shoutoutPanel);
+        mainContent.add(Box.createVerticalStrut(40));
+
+        // ================= OPTIONS GRID =================
+        JPanel optionsPanel = new JPanel(new GridLayout(2, 3, 35, 35));
+        optionsPanel.setOpaque(false);
+        optionsPanel.setBorder(new EmptyBorder(20, 120, 40, 120));
+
+        String[] options = {
+                "Career Guidance", "Gaming & Leaderboard", "Task Manager",
+                "Complaint Box", "Student Services", "Academic Resources"
         };
 
-        Color[] buttonColors = {
-                new Color(17, 138, 178), // teal
-                new Color(255, 87, 34),  // deep orange
-                new Color(76, 175, 80),  // green
-                new Color(33, 150, 243), // blue
-                new Color(244, 67, 54),  // red
-                new Color(255, 193, 7)   // amber
-        };
-
-        for (int i = 0; i < infoOptions.length; i++) {
-            JButton optionBtn = new JButton(infoOptions[i]);
-            optionBtn.setFocusPainted(false);
-            optionBtn.setBackground(buttonColors[i]);
-            optionBtn.setForeground(Color.WHITE);
-            optionBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            infoButtons.add(optionBtn);
+        for (String option : options) {
+            optionsPanel.add(createOptionButton(option, frame));
         }
 
-        // Contact Info Section
-        JPanel contactPanel = new JPanel();
-        contactPanel.setBackground(new Color(24, 61, 89));
-        contactPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        contactPanel.setPreferredSize(new Dimension(1000, 80));
+        mainContent.add(optionsPanel);
+        mainContent.add(Box.createVerticalGlue());
 
-        JLabel contactLabel = new JLabel("Contact us: info@ljuniversity.edu | +91-9876543210");
-        contactLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        contactLabel.setForeground(Color.WHITE);
+        // Add scroll pane
+        JScrollPane scrollPane = new JScrollPane(mainContent);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getVerticalScrollBar().setBackground(BG_DARKER);
+        scrollPane.getVerticalScrollBar().setForeground(BLUE_DARK);
+        frame.add(scrollPane, BorderLayout.CENTER);
 
-        contactPanel.add(contactLabel);
+        // ================= FOOTER =================
+        JPanel footer = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setPaint(new GradientPaint(0, 0, BLUE_DARK, getWidth(), 0, BLUE_LIGHT));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        footer.setPreferredSize(new Dimension(0, 60));
+        footer.setOpaque(false);
+        footer.setBorder(new EmptyBorder(15, 30, 15, 30));
 
-        mainPanel.add(heroPanel);
-        mainPanel.add(aboutPanel);
-        mainPanel.add(infoButtons);
-        mainPanel.add(contactPanel);
+        JLabel contact = new JLabel("📧 Contact: support@ljuniversity.in | 📞 Phone: +91-XXXXXXXXXX");
+        contact.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        contact.setForeground(WHITE);
 
-        frame.add(header, BorderLayout.NORTH);
-        frame.add(new JScrollPane(mainPanel), BorderLayout.CENTER);
+        JLabel copyright = new JLabel("© 2024 LJ University. All rights reserved.");
+        copyright.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        copyright.setForeground(WHITE);
+
+        footer.add(contact, BorderLayout.WEST);
+        footer.add(copyright, BorderLayout.EAST);
+        frame.add(footer, BorderLayout.SOUTH);
+
         frame.setVisible(true);
     }
 
-    private JPanel createInfoBox(String title, String description, Color bgColor) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBackground(bgColor);
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    // Create enhanced interactive option buttons
+    private static JButton createOptionButton(String text, JFrame parentFrame) {
+        JButton button = new JButton("<html><center><h2>" + text + "</h2><br>✨ Click to explore</center></html>") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                // Shadow effect
+                g2.setColor(SHADOW);
+                g2.fillRoundRect(4, 4, getWidth()-8, getHeight()-8, 20, 20);
 
-        JTextArea descLabel = new JTextArea(description);
-        descLabel.setWrapStyleWord(true);
-        descLabel.setLineWrap(true);
-        descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        descLabel.setForeground(Color.WHITE);
-        descLabel.setEditable(false);
-        descLabel.setBackground(bgColor);
+                if (getModel().isPressed()) {
+                    g2.setPaint(new GradientPaint(0, 0, BLUE_DARK, getWidth(), getHeight(), BLUE_LIGHT));
+                } else if (getModel().isRollover()) {
+                    g2.setPaint(new GradientPaint(0, 0, BLUE_ACCENT, getWidth(), getHeight(), BLUE_LIGHT));
+                } else {
+                    g2.setPaint(new GradientPaint(0, 0, WHITE, getWidth(), getHeight(), BG_LIGHT));
+                }
 
-        panel.add(titleLabel, BorderLayout.NORTH);
-        panel.add(descLabel, BorderLayout.CENTER);
+                g2.fillRoundRect(0, 0, getWidth()-4, getHeight()-4, 20, 20);
 
-        return panel;
+                // Border
+                g2.setColor(BLUE_DARK);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(1, 1, getWidth()-6, getHeight()-6, 20, 20);
+
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setForeground(BLUE_DARK);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(220, 130));
+
+        button.addActionListener(e -> {
+            switch (text) {
+                case "Task Manager":
+                    parentFrame.setVisible(false);
+                    TaskManagerUI.openTaskManager();
+                    break;
+                case "Career Guidance":
+                    JOptionPane.showMessageDialog(parentFrame, "🎯 Career Guidance module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Gaming & Leaderboard":
+                    JOptionPane.showMessageDialog(parentFrame, "🎮 Gaming & Leaderboard module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Complaint Box":
+                    JOptionPane.showMessageDialog(parentFrame, "📝 Complaint Box module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Student Services":
+                    JOptionPane.showMessageDialog(parentFrame, "🛠️ Student Services module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case "Academic Resources":
+                    JOptionPane.showMessageDialog(parentFrame, "📚 Academic Resources module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+            }
+        });
+
+        return button;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(HomePageSwing::show);
     }
 }
