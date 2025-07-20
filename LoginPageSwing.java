@@ -30,7 +30,7 @@ public class LoginPageSwing {
         headingPanel.setOpaque(false);
 
         // Logo placeholder in upper right corner
-        ImageIcon logoIcon = new ImageIcon("C:/Users/YUVRAJ/IdeaProjects/lj companion/src/img.png"); // Replace with your logo path
+        ImageIcon logoIcon = new ImageIcon("college_logo.png"); // Replace with your logo path
         JLabel logoLabel = new JLabel(logoIcon);
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         logoLabel.setPreferredSize(new Dimension(60, 60));
@@ -133,7 +133,7 @@ public class LoginPageSwing {
 
                 JOptionPane.showMessageDialog(frame, "Login Successful!");
                 frame.dispose();
-                ui.HomePageSwing.show();
+                HomePageSwing.show();
             } else {
                 errorLabel.setText("Invalid username or password");
             }
