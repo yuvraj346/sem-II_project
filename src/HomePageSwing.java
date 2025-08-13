@@ -55,7 +55,7 @@ public final class HomePageSwing {
         title.setForeground(WHITE);
 
         // Logo (top right)
-        ImageIcon logoIcon = new ImageIcon("C:/Users/YUVRAJ/IdeaProjects/lj companion/src/img.png");
+        ImageIcon logoIcon = new ImageIcon("college_logo.png");
         Image img = logoIcon.getImage();
         Image newImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(newImg));
@@ -253,7 +253,7 @@ public final class HomePageSwing {
                     break;
                 case "Gaming & Leaderboard":
                     parentFrame.setVisible(false);
-                    new EventsLeaderboardUI();
+                    new EventsLeaderboardUI().createAndShowGUI();
                     break;
                 case "Complaint Box":
                     parentFrame.setVisible(false);
@@ -264,7 +264,8 @@ public final class HomePageSwing {
                     new FacultyFeedback().setVisible(true);
                     break;
                 case "Academic Resources":
-                    JOptionPane.showMessageDialog(parentFrame, "📚 Academic Resources module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    parentFrame.dispose();
+                    new AcademicResourcesUI().setVisible(true);
                     break;
             }
         });
