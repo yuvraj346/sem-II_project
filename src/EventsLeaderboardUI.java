@@ -70,9 +70,10 @@ class BST {
 
 // Futuristic Neon Gradient Panel
 class NeonGradientPanel extends JPanel {
-    private Color color1 = new Color(10, 10, 25);
-    private Color color2 = new Color(25, 15, 40);
-    private Color color3 = new Color(40, 20, 60);
+    // Blue-black theme
+    private Color color1 = new Color(8, 10, 18);   // near black
+    private Color color2 = new Color(15, 20, 35);  // deep navy
+    private Color color3 = new Color(25, 35, 55);  // dark blue
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -81,7 +82,7 @@ class NeonGradientPanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-        // Create deep navy to purple gradient background
+        // Create deep navy to blue gradient background
         GradientPaint gradient1 = new GradientPaint(
                 0, 0, color1,
                 getWidth(), getHeight(), color2
@@ -89,22 +90,21 @@ class NeonGradientPanel extends JPanel {
         g2d.setPaint(gradient1);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        // Add pink glow effect
-        RadialGradientPaint pinkGlow = new RadialGradientPaint(
-                getWidth() * 0.3f, getHeight() * 0.2f, getWidth() * 0.7f,
+        // Add blue glow effects
+        RadialGradientPaint blueGlow1 = new RadialGradientPaint(
+                getWidth() * 0.25f, getHeight() * 0.2f, getWidth() * 0.7f,
                 new float[]{0.0f, 1.0f},
-                new Color[]{new Color(255, 50, 150, 60), new Color(255, 50, 150, 0)}
+                new Color[]{new Color(40, 120, 255, 60), new Color(40, 120, 255, 0)}
         );
-        g2d.setPaint(pinkGlow);
+        g2d.setPaint(blueGlow1);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        // Add cyan glow effect
-        RadialGradientPaint cyanGlow = new RadialGradientPaint(
-                getWidth() * 0.7f, getHeight() * 0.8f, getWidth() * 0.6f,
+        RadialGradientPaint blueGlow2 = new RadialGradientPaint(
+                getWidth() * 0.75f, getHeight() * 0.8f, getWidth() * 0.6f,
                 new float[]{0.0f, 1.0f},
-                new Color[]{new Color(50, 255, 255, 40), new Color(50, 255, 255, 0)}
+                new Color[]{new Color(80, 180, 255, 40), new Color(80, 180, 255, 0)}
         );
-        g2d.setPaint(cyanGlow);
+        g2d.setPaint(blueGlow2);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
         // Add subtle grid pattern for futuristic feel
@@ -124,9 +124,9 @@ class NeonGradientPanel extends JPanel {
 // Neon Glowing Panel
 class NeonPanel extends JPanel {
     private int radius = 15;
-    private Color backgroundColor = new Color(20, 20, 35, 200);
+    private Color backgroundColor = new Color(15, 20, 30, 200);
     private boolean hasGlow = false;
-    private Color glowColor = new Color(255, 50, 150);
+    private Color glowColor = new Color(60, 140, 255); // electric blue
     private boolean isHovered = false;
 
     public NeonPanel() {
@@ -173,8 +173,8 @@ class NeonPanel extends JPanel {
         // Add neon border
         if (hasGlow || isHovered) {
             GradientPaint borderGradient = new GradientPaint(
-                    0, 0, glowColor,
-                    getWidth(), getHeight(), new Color(50, 255, 255)
+                    0, 0, new Color(60, 140, 255),
+                    getWidth(), getHeight(), new Color(140, 200, 255)
             );
             g2d.setPaint(borderGradient);
             g2d.setStroke(new BasicStroke(2));
@@ -188,8 +188,9 @@ class NeonPanel extends JPanel {
 
 // Neon Glowing Button
 class NeonButton extends JButton {
-    private Color color1 = new Color(255, 50, 150);
-    private Color color2 = new Color(50, 255, 255);
+    // Blue gradient colors
+    private Color color1 = new Color(50, 120, 255);
+    private Color color2 = new Color(120, 200, 255);
     private boolean isHovered = false;
     private boolean isPressed = false;
 
@@ -202,6 +203,7 @@ class NeonButton extends JButton {
         setForeground(Color.WHITE);
         setFont(new Font("Segoe UI", Font.BOLD, 14));
         setCursor(new Cursor(Cursor.HAND_CURSOR));
+        setToolTipText(getText());
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -245,7 +247,7 @@ class NeonButton extends JButton {
 
         // Add inner glow
         if (isHovered) {
-            g2d.setColor(new Color(255, 255, 255, 40));
+            g2d.setColor(new Color(255, 255, 255, 25));
             g2d.fill(roundedRectangle);
         }
 
@@ -257,7 +259,7 @@ class NeonButton extends JButton {
 
         // Add text glow
         if (isHovered) {
-            g2d.setColor(new Color(255, 255, 255, 100));
+            g2d.setColor(new Color(200, 220, 255, 100));
             g2d.drawString(getText(), textX + 1, textY + 1);
         }
         g2d.setColor(Color.WHITE);
@@ -464,13 +466,17 @@ public class EventsLeaderboardUI {
     private JPanel eventsContentPanel;
     private JPanel leaderboardContentPanel;
     private CardLayout cardLayout;
+    private String currentView = "MANAGERS"; // Track current view: MANAGERS, EVENTS, LEADERBOARD
+    private String currentManager = ""; // Track which manager is selected
+    private NeonButton headerBackButton; // Reference to header back button
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new EventsLeaderboardUI().createAndShowGUI());
     }
 
     public void createAndShowGUI() {
-        JFrame frame = new JFrame("🎮 Events & Leaderboard");
+        applyBlueTheme();
+        JFrame frame = new JFrame("Gaming Leaderboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1400, 900);
         frame.setLayout(new BorderLayout());
@@ -482,95 +488,86 @@ public class EventsLeaderboardUI {
         JPanel mainLayout = new JPanel(new BorderLayout());
         mainLayout.setOpaque(false);
 
-        // Create header
+        // Create header, content, footer
         JPanel headerPanel = createHeaderPanel();
-
-        // Create tab buttons
-        JPanel tabPanel = createTabPanel();
-
-        // Create content area
         JPanel contentPanel = createContentPanel();
+        JPanel footerPanel = createFooterPanel();
 
         mainLayout.add(headerPanel, BorderLayout.NORTH);
-        mainLayout.add(tabPanel, BorderLayout.CENTER);
-        mainLayout.add(contentPanel, BorderLayout.SOUTH);
+        mainLayout.add(contentPanel, BorderLayout.CENTER); // content fills center
+        mainLayout.add(footerPanel, BorderLayout.SOUTH);   // footer at bottom
 
         frame.add(mainLayout, BorderLayout.CENTER);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
+    private void applyBlueTheme() {
+        // UIManager tweaks for blue-black-white scheme
+        UIManager.put("ToolTip.background", new Color(20, 24, 35));
+        UIManager.put("ToolTip.foreground", Color.WHITE);
+        UIManager.put("Button.focus", new Color(0, 0, 0, 0));
+        UIManager.put("Table.background", new Color(15, 20, 30));
+        UIManager.put("Table.foreground", Color.WHITE);
+        UIManager.put("Table.selectionBackground", new Color(50, 120, 255));
+        UIManager.put("Table.selectionForeground", Color.WHITE);
+        UIManager.put("Table.gridColor", new Color(40, 50, 70));
+        UIManager.put("TableHeader.background", new Color(20, 28, 45));
+        UIManager.put("TableHeader.foreground", Color.WHITE);
+        UIManager.put("ScrollBar.thumb", new Color(50, 120, 255));
+        UIManager.put("ScrollBar.track", new Color(15, 20, 30));
+    }
+
     private JPanel createHeaderPanel() {
-        NeonPanel headerPanel = new NeonPanel(0);
-        headerPanel.setLayout(new BorderLayout());
-        headerPanel.setBorder(new EmptyBorder(20, 30, 20, 30));
-        headerPanel.setBackground(new Color(15, 15, 30, 240));
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(true);
+        headerPanel.setBackground(new Color(10, 12, 18)); // solid full-width bar
+        headerPanel.setBorder(new EmptyBorder(8, 16, 8, 16));
 
-        // Title with neon glow effect
-        JLabel titleLabel = new JLabel("Events & Leaderboard") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // Back to Home button
+        headerBackButton = new NeonButton("< Back");
+        headerBackButton.setPreferredSize(new Dimension(96, 28));
+        headerBackButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        headerBackButton.setToolTipText("Go back to Home");
+        headerBackButton.addActionListener(e -> handleBackNavigation());
 
-                // Create neon gradient for text
-                GradientPaint textGradient = new GradientPaint(
-                        0, 0, new Color(255, 50, 150),
-                        getWidth(), 0, new Color(50, 255, 255)
-                );
-                g2d.setPaint(textGradient);
-                g2d.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        // Centered navigation buttons
+        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 24, 0));
+        navPanel.setOpaque(false);
+        NeonButton eventsTab = new NeonButton("Events");
+        eventsTab.setPreferredSize(new Dimension(120, 32));
+        eventsTab.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        eventsTab.setToolTipText("View Events");
+        eventsTab.addActionListener(e -> showEventsView());
+        NeonButton leaderboardTab = new NeonButton("Leaderboard");
+        leaderboardTab.setPreferredSize(new Dimension(120, 32));
+        leaderboardTab.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        leaderboardTab.setToolTipText("View Leaderboard");
+        leaderboardTab.addActionListener(e -> showLeaderboardView());
+        navPanel.add(eventsTab);
+        navPanel.add(leaderboardTab);
 
-                FontMetrics fm = g2d.getFontMetrics();
-                int textX = 0;
-                int textY = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-
-                // Add text glow
-                g2d.setColor(new Color(255, 50, 150, 100));
-                g2d.drawString(getText(), textX + 2, textY + 2);
-                g2d.setPaint(textGradient);
-                g2d.drawString(getText(), textX, textY);
-
-                g2d.dispose();
-            }
-        };
-        titleLabel.setPreferredSize(new Dimension(400, 50));
-
-        // Logo with neon glow
-        JLabel logoLabel = new JLabel("🏆") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Create neon gradient background for logo
-                GradientPaint logoGradient = new GradientPaint(
-                        0, 0, new Color(255, 50, 150),
-                        getWidth(), getHeight(), new Color(50, 255, 255)
-                );
-                g2d.setPaint(logoGradient);
-
-                // Draw circular logo background with glow
-                g2d.fill(new Ellipse2D.Float(5, 5, getWidth() - 10, getHeight() - 10));
-
-                // Draw logo text
-                g2d.setColor(Color.WHITE);
-                g2d.setFont(new Font("Segoe UI", Font.BOLD, 24));
-                FontMetrics fm = g2d.getFontMetrics();
-                int textX = (getWidth() - fm.stringWidth("🏆")) / 2;
-                int textY = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
-                g2d.drawString("🏆", textX, textY);
-
-                g2d.dispose();
-            }
-        };
-        logoLabel.setPreferredSize(new Dimension(60, 60));
-        logoLabel.setOpaque(false);
-
-        headerPanel.add(titleLabel, BorderLayout.WEST);
-        headerPanel.add(logoLabel, BorderLayout.EAST);
+        headerPanel.add(headerBackButton, BorderLayout.WEST);
+        headerPanel.add(navPanel, BorderLayout.CENTER);
 
         return headerPanel;
+    }
+
+    private void handleBackNavigation() {
+        if (currentView.equals("EVENTS")) {
+            // If viewing events, go back to managers
+            showEventManagersView();
+        } else {
+            // If on managers or leaderboard, go to home
+            Component comp = headerBackButton;
+            while (comp != null && !(comp instanceof JFrame)) {
+                comp = comp.getParent();
+            }
+            if (comp != null) {
+                ((JFrame) comp).dispose();
+            }
+            HomePageSwing.show();
+        }
     }
 
     private JPanel createTabPanel() {
@@ -582,11 +579,13 @@ public class EventsLeaderboardUI {
         // Events tab
         NeonButton eventsTab = new NeonButton("📅 Events");
         eventsTab.setPreferredSize(new Dimension(120, 40));
+        eventsTab.setToolTipText("View Events");
         eventsTab.addActionListener(e -> showEventsView());
 
         // Leaderboard tab
         NeonButton leaderboardTab = new NeonButton("🏆 Leaderboard");
         leaderboardTab.setPreferredSize(new Dimension(150, 40));
+        leaderboardTab.setToolTipText("View Leaderboard");
         leaderboardTab.addActionListener(e -> showLeaderboardView());
 
         tabPanel.add(eventsTab);
@@ -629,7 +628,7 @@ public class EventsLeaderboardUI {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
 
-        // Title
+        // Title (text only, no emoji)
         JLabel titleLabel = new JLabel("Select Event Manager to Browse Events", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -641,25 +640,25 @@ public class EventsLeaderboardUI {
 
         // Binary Brains
         EventManagerCard binaryBrainsCard = new EventManagerCard(
-                "🧠 Binary Brains",
+                "Binary Brains",
                 "Technical and coding events",
-                new Color(255, 50, 150),
+                new Color(60, 140, 255),
                 e -> showEventManagerEvents("Binary Brains")
         );
 
         // LFA
         EventManagerCard lfaCard = new EventManagerCard(
-                "⚡ LFA",
+                "LFA",
                 "Innovation and technology events",
-                new Color(50, 255, 255),
+                new Color(120, 200, 255),
                 e -> showEventManagerEvents("LFA")
         );
 
         // LJSC
         EventManagerCard ljscCard = new EventManagerCard(
-                "🎭 LJSC Events",
+                "LJSC Events",
                 "Cultural and sports events",
-                new Color(255, 150, 50),
+                new Color(100, 160, 255),
                 e -> showEventManagerEvents("LJSC")
         );
 
@@ -679,15 +678,13 @@ public class EventsLeaderboardUI {
     }
 
     private void showEventManagerEvents(String managerName) {
+        currentView = "EVENTS";
+        currentManager = managerName;
+        headerBackButton.setToolTipText("Go back to Event Managers");
         eventsContentPanel.removeAll();
 
         JPanel eventsPanel = new JPanel(new BorderLayout());
         eventsPanel.setOpaque(false);
-
-        // Back button
-        NeonButton backButton = new NeonButton("← Back to Event Managers");
-        backButton.setPreferredSize(new Dimension(200, 40));
-        backButton.addActionListener(e -> showEventManagersView());
 
         // Title
         JLabel titleLabel = new JLabel(managerName + " Events", SwingConstants.CENTER);
@@ -695,9 +692,22 @@ public class EventsLeaderboardUI {
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setBorder(new EmptyBorder(20, 0, 30, 0));
 
-        // Events grid
-        JPanel eventsGrid = new JPanel(new GridLayout(0, 2, 20, 20));
+        // Events grid (responsive columns)
+        JPanel eventsGrid = new JPanel();
+        eventsGrid.setLayout(new GridLayout(0, 2, 20, 20)); // default 2 columns
         eventsGrid.setOpaque(false);
+        // Adjust columns on resize: 3 columns if width > 1100
+        eventsGrid.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override public void componentResized(java.awt.event.ComponentEvent e) {
+                int w = eventsGrid.getWidth();
+                int cols = (w > 1100) ? 3 : 2;
+                GridLayout gl = (GridLayout) eventsGrid.getLayout();
+                if (gl.getColumns() != cols) {
+                    eventsGrid.setLayout(new GridLayout(0, cols, 20, 20));
+                    eventsGrid.revalidate();
+                }
+            }
+        });
 
         Color accentColor = getManagerColor(managerName);
 
@@ -726,10 +736,9 @@ public class EventsLeaderboardUI {
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.add(backButton, BorderLayout.WEST);
-        topPanel.add(titleLabel, BorderLayout.CENTER);
-
+        topPanel.add(titleLabel, BorderLayout.CENTER); // header back button handles navigation
         eventsPanel.add(topPanel, BorderLayout.NORTH);
+
         eventsPanel.add(scrollPane, BorderLayout.CENTER);
 
         eventsContentPanel.add(eventsPanel);
@@ -738,6 +747,9 @@ public class EventsLeaderboardUI {
     }
 
     private void showEventManagersView() {
+        currentView = "MANAGERS";
+        currentManager = "";
+        headerBackButton.setToolTipText("Go back to Home");
         eventsContentPanel.removeAll();
         eventsContentPanel.add(createEventManagersView());
         eventsContentPanel.revalidate();
@@ -746,10 +758,10 @@ public class EventsLeaderboardUI {
 
     private Color getManagerColor(String managerName) {
         switch (managerName) {
-            case "Binary Brains": return new Color(255, 50, 150);
-            case "LFA": return new Color(50, 255, 255);
-            case "LJSC": return new Color(255, 150, 50);
-            default: return new Color(255, 50, 150);
+            case "Binary Brains": return new Color(60, 140, 255);
+            case "LFA": return new Color(120, 200, 255);
+            case "LJSC": return new Color(100, 160, 255);
+            default: return new Color(60, 140, 255);
         }
     }
 
@@ -858,10 +870,28 @@ public class EventsLeaderboardUI {
     }
 
     private void showEventsView() {
+        currentView = "MANAGERS";
+        currentManager = "";
+        headerBackButton.setToolTipText("Go back to Home");
         cardLayout.show(eventsContentPanel.getParent(), "EVENTS");
     }
 
     private void showLeaderboardView() {
+        currentView = "LEADERBOARD";
+        currentManager = "";
+        headerBackButton.setToolTipText("Go back to Home");
         cardLayout.show(leaderboardContentPanel.getParent(), "LEADERBOARD");
+    }
+
+    private JPanel createFooterPanel() {
+        JPanel footer = new JPanel(new BorderLayout());
+        footer.setOpaque(true);
+        footer.setBackground(new Color(10, 12, 18));
+        footer.setBorder(new EmptyBorder(6, 16, 6, 16));
+        JLabel credits = new JLabel("© 2025 Gaming Leaderboard • v1.0");
+        credits.setForeground(new Color(210, 215, 230));
+        credits.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        footer.add(credits, BorderLayout.EAST);
+        return footer;
     }
 }
