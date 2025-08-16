@@ -1,165 +1,182 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class LoginPageSwing {
+public class LoginPageSwing extends JFrame {
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginPageSwing::createAndShowGUI);
-    }
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JButton loginButton;
 
-    public static void createAndShowGUI() {
-        // Create the main frame
-        JFrame frame = new JFrame("Student Companion - Login");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(true);
+    public LoginPageSwing() {
+        setTitle("Student Companion - Login");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setLocationRelativeTo(null);
 
-        // ================= HEADING PANEL WITH GRADIENT =================
-        JPanel headingPanel = new JPanel(new BorderLayout()) {
+        // Main panel with background image
+        JPanel mainPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setPaint(new GradientPaint(0, 0, new Color(0, 0, 139), getWidth(), 0, new Color(70, 130, 180)));
-                g2.fillRect(0, 0, getWidth(), getHeight());
                 super.paintComponent(g);
-                g2.dispose();
+                ImageIcon bgImage = new ImageIcon("C:\\Users\\YUVRAJ\\IdeaProjects\\example\\src\\bg4.jpg");
+                g.drawImage(bgImage.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
-        headingPanel.setPreferredSize(new Dimension(0, 80));
-        headingPanel.setOpaque(false);
+        setContentPane(mainPanel);
+        mainPanel.setLayout(new GridBagLayout());
 
-        // Logo placeholder in upper right corner
-        ImageIcon logoIcon = new ImageIcon("college_logo.png"); // Replace with your logo path
-        JLabel logoLabel = new JLabel(logoIcon);
-        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        logoLabel.setPreferredSize(new Dimension(60, 60));
-        logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+        // Header panel for the logo and university name
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(false);
 
-        // Heading label
-        JLabel headingLabel = new JLabel("Student Companion");
-        headingLabel.setForeground(Color.WHITE);
-        headingLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        headingLabel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 0));
+        // University Name Label
+        JLabel universityLabel = new JLabel("LJ University");
+        universityLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        universityLabel.setForeground(new Color(0, 102, 204)); // Changed to dark blue
+        universityLabel.setBorder(new EmptyBorder(10, 20, 10, 10));
+        headerPanel.add(universityLabel, BorderLayout.WEST);
 
-        headingPanel.add(headingLabel, BorderLayout.WEST);
-        headingPanel.add(logoLabel, BorderLayout.EAST);
+        // Logo
+        ImageIcon originalLogoIcon = new ImageIcon("C:\\Users\\YUVRAJ\\IdeaProjects\\example\\src\\img.png"); // Replace with your logo path
+        Image originalLogoImage = originalLogoIcon.getImage();
+        Image scaledLogoImage = originalLogoImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH); // Scale to 60x60
+        ImageIcon scaledLogoIcon = new ImageIcon(scaledLogoImage);
+        JLabel logoLabel = new JLabel(scaledLogoIcon);
+        logoLabel.setBorder(new EmptyBorder(10, 10, 10, 20));
+        headerPanel.add(logoLabel, BorderLayout.EAST);
 
-        // ================= FORM PANEL WITH GRADIENT BACKGROUND =================
-        JPanel formPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setPaint(new GradientPaint(0, 0, new Color(240, 248, 255), getWidth(), getHeight(), new Color(230, 240, 250)));
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-        formPanel.setOpaque(false);
-        formPanel.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
+        // Add header panel to the top
+        GridBagConstraints headerGbc = new GridBagConstraints();
+        headerGbc.gridx = 0;
+        headerGbc.gridy = 0;
+        headerGbc.weightx = 1.0;
+        headerGbc.anchor = GridBagConstraints.NORTH;
+        headerGbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(headerPanel, headerGbc);
 
-        // Login subtitle
-        JLabel loginSubtitle = new JLabel("Welcome Back!");
-        loginSubtitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        loginSubtitle.setForeground(new Color(0, 0, 139));
-        loginSubtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginSubtitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        // Create a semi-transparent panel for the login form
+        JPanel loginPanel = new JPanel();
+        loginPanel.setBackground(new Color(255, 255, 255, 200)); // White with transparency
+        loginPanel.setLayout(new GridBagLayout());
+        loginPanel.setBorder(new EmptyBorder(40, 40, 40, 40)); // Only EmptyBorder for padding
+        loginPanel.setOpaque(true);
 
-        // Username field
-        JLabel userLabel = new JLabel("Username:");
-        userLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        userLabel.setForeground(new Color(0, 0, 139));
-        userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        JTextField userField = new JTextField();
-        userField.setMaximumSize(new Dimension(300, 35));
-        userField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        // Title
+        JLabel titleLabel = new JLabel("Student Companion");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        titleLabel.setForeground(new Color(0, 102, 204));
+        loginPanel.add(titleLabel, gbc);
 
-        // Password field
-        JLabel passLabel = new JLabel("Password:");
-        passLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        passLabel.setForeground(new Color(0, 0, 139));
-        passLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Subtitle
+        gbc.gridy++;
+        JLabel subtitleLabel = new JLabel("Welcome Back!");
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        subtitleLabel.setForeground(Color.DARK_GRAY);
+        loginPanel.add(subtitleLabel, gbc);
 
-        JPasswordField passField = new JPasswordField();
-        passField.setMaximumSize(new Dimension(300, 35));
-        passField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        // Username
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        usernameLabel.setForeground(new Color(0, 102, 204));
+        loginPanel.add(usernameLabel, gbc);
 
-        // Error label
-        JLabel errorLabel = new JLabel("");
-        errorLabel.setForeground(new Color(220, 53, 69));
-        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        gbc.gridx = 1;
+        usernameField = new JTextField(20);
+        usernameField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        usernameField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0, 102, 204)),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        loginPanel.add(usernameField, gbc);
 
-        // Login button with gradient
-        JButton loginButton = new JButton("Login") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // Password
+        gbc.gridx = 0;
+        gbc.gridy++;
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        passwordLabel.setForeground(new Color(0, 102, 204));
+        loginPanel.add(passwordLabel, gbc);
 
-                if (getModel().isPressed()) {
-                    g2.setPaint(new GradientPaint(0, 0, new Color(0, 0, 100), getWidth(), getHeight(), new Color(70, 130, 180)));
-                } else if (getModel().isRollover()) {
-                    g2.setPaint(new GradientPaint(0, 0, new Color(0, 0, 120), getWidth(), getHeight(), new Color(100, 149, 237)));
-                } else {
-                    g2.setPaint(new GradientPaint(0, 0, new Color(0, 0, 139), getWidth(), getHeight(), new Color(70, 130, 180)));
-                }
+        gbc.gridx = 1;
+        passwordField = new JPasswordField(20);
+        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        passwordField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0, 102, 204)),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        loginPanel.add(passwordField, gbc);
 
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                super.paintComponent(g);
-                g2.dispose();
-            }
-        };
-        loginButton.setContentAreaFilled(false);
-        loginButton.setOpaque(false);
+        // Login Button
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        loginButton = new JButton("Login");
+        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        loginButton.setBackground(new Color(0, 102, 204));
         loginButton.setForeground(Color.WHITE);
-        loginButton.setBorderPainted(false);
         loginButton.setFocusPainted(false);
-        loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.setMaximumSize(new Dimension(200, 40));
-        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        loginButton.setBorder(new EmptyBorder(10, 40, 10, 40));
+        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Action when login button is clicked
-        loginButton.addActionListener(e -> {
-            String username = userField.getText();
-            String password = new String(passField.getPassword());
+        // Button hover effect
+        loginButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                loginButton.setBackground(new Color(0, 81, 163));
+            }
 
-            if ((username.equals("yuvraj") && password.equals("1234")) ||
-                    (username.equals("anjali") && password.equals("abcd"))) {
-
-                JOptionPane.showMessageDialog(frame, "Login Successful!");
-                frame.dispose();
-                HomePageSwing.show();
-            } else {
-                errorLabel.setText("Invalid username or password");
+            public void mouseExited(MouseEvent evt) {
+                loginButton.setBackground(new Color(0, 102, 204));
             }
         });
 
-        // Add components to the form panel
-        formPanel.add(loginSubtitle);
-        formPanel.add(Box.createVerticalStrut(20));
-        formPanel.add(userLabel);
-        formPanel.add(Box.createVerticalStrut(5));
-        formPanel.add(userField);
-        formPanel.add(Box.createVerticalStrut(15));
-        formPanel.add(passLabel);
-        formPanel.add(Box.createVerticalStrut(5));
-        formPanel.add(passField);
-        formPanel.add(Box.createVerticalStrut(20));
-        formPanel.add(loginButton);
-        formPanel.add(Box.createVerticalStrut(10));
-        formPanel.add(errorLabel);
+        loginPanel.add(loginButton, gbc);
 
-        // ================= MAIN PANEL =================
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(headingPanel, BorderLayout.NORTH);
-        mainPanel.add(formPanel, BorderLayout.CENTER);
+        // Error Label
+        gbc.gridy++;
+        JLabel errorLabel = new JLabel("");
+        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        errorLabel.setForeground(Color.RED);
+        loginPanel.add(errorLabel, gbc);
 
-        frame.setContentPane(mainPanel);
-        frame.setVisible(true);
+        // Action Listener for Login Button
+        loginButton.addActionListener(e -> {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+
+            if ((username.equals("yuvraj") && password.equals("1234")) ||
+                    (username.equals("anjali") && password.equals("abcd"))) {
+                JOptionPane.showMessageDialog(this, "Login Successful!");
+                dispose();
+                HomePageSwing.show();
+            } else {
+                errorLabel.setText("Invalid username or password. Please try again.");
+            }
+        });
+
+        // Add login panel to the center
+        GridBagConstraints loginGbc = new GridBagConstraints();
+        loginGbc.gridx = 0;
+        loginGbc.gridy = 1;
+        loginGbc.weighty = 1.0; // Push the login panel to the center vertically
+        loginGbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(loginPanel, loginGbc);
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(LoginPageSwing::new);
     }
 }
