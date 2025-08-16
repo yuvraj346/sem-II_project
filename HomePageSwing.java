@@ -55,7 +55,7 @@ public final class HomePageSwing {
         title.setForeground(WHITE);
 
         // Logo (top right)
-        ImageIcon logoIcon = new ImageIcon("C:/Users/YUVRAJ/IdeaProjects/lj companion/src/img.png");
+        ImageIcon logoIcon = new ImageIcon("college_logo.png");
         Image img = logoIcon.getImage();
         Image newImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(newImg));
@@ -152,7 +152,7 @@ public final class HomePageSwing {
 
         String[] options = {
                 "Career Guidance", "Gaming & Leaderboard", "Task Manager",
-                "Complaint Box", "Student Services", "Academic Resources"
+                "Complaint Box", "Feedback Form", "Academic Resources"
         };
 
         for (String option : options) {
@@ -253,17 +253,19 @@ public final class HomePageSwing {
                     break;
                 case "Gaming & Leaderboard":
                     parentFrame.setVisible(false);
-//                    new EventsLeaderboardUI();
+                    new EventsLeaderboardUI().createAndShowGUI();
                     break;
                 case "Complaint Box":
                     parentFrame.setVisible(false);
                     SubmissionBoxUI.openSubmissionBox();
                     break;
-                case "Student Services":
-                    JOptionPane.showMessageDialog(parentFrame, "🛠️ Student Services module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                case "Feedback Form":
+                    parentFrame.setVisible(false);
+                    new FacultyFeedback().setVisible(true);
                     break;
                 case "Academic Resources":
-                    JOptionPane.showMessageDialog(parentFrame, "📚 Academic Resources module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    parentFrame.dispose();
+                    new AcademicResourcesUI().setVisible(true);
                     break;
             }
         });
