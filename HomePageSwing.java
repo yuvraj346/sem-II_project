@@ -264,7 +264,7 @@ public final class HomePageSwing {
                     parentFrame.setVisible(false);
                     new FacultyFeedback().setVisible(true);
                     break;
-                                case "Academic Resources":
+                case "Academic Resources":
                     parentFrame.dispose();
                     new AcademicResourcesUI().setVisible(true);
                     break;
