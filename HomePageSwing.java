@@ -249,7 +249,8 @@ public final class HomePageSwing {
                     TaskManagerUI.openTaskManager();
                     break;
                 case "Career Guidance":
-                    JOptionPane.showMessageDialog(parentFrame, "🎯 Career Guidance module coming soon!", "Coming Soon", JOptionPane.INFORMATION_MESSAGE);
+                    parentFrame.setVisible(false);
+                    new TechGrowthDashboard().main(new String[]{});
                     break;
                 case "Gaming & Leaderboard":
                     parentFrame.setVisible(false);
@@ -263,7 +264,7 @@ public final class HomePageSwing {
                     parentFrame.setVisible(false);
                     new FacultyFeedback().setVisible(true);
                     break;
-                case "Academic Resources":
+                                case "Academic Resources":
                     parentFrame.dispose();
                     new AcademicResourcesUI().setVisible(true);
                     break;
