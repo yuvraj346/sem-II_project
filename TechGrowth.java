@@ -5,13 +5,13 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import javax.swing.Timer;
+import java.sql.*;
 
 /**
  * Tech-Growth Dashboard v3
@@ -26,6 +26,7 @@ class TechGrowthDashboard extends JPanel {
         final String field;
         final int percent;
         final String tools;
+
 
         Entry(String field, int percent, String tools) {
             this.field = field;
@@ -152,7 +153,7 @@ class TechGrowthDashboard extends JPanel {
             // Animated bar fill
             int len = (int) (usableW * e.percent / 100.0 *
                     (1 - Math.pow(1 - (double) frame / FRAMES, 3)));
-           g2.setColor(colors[i % colors.length]) ;
+            g2.setColor(colors[i % colors.length]) ;
 
             g2.fillRect(LEFT_W, y, len, BAR_H);
 
@@ -261,6 +262,26 @@ class TechGrowthDashboard extends JPanel {
 
             root.setBackground(BG);
             root.setBorder(new EmptyBorder(20, 10, 20, 20));
+            
+            // Add back button at the top left
+            JButton backButton = new JButton("← Back to Home");
+            backButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            backButton.setForeground(TEXT);
+            backButton.setBackground(new Color(40, 40, 55));
+            backButton.setFocusPainted(false);
+            backButton.setBorderPainted(false);
+            backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            backButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+            backButton.addActionListener(e -> {
+                f.dispose();
+                HomePageSwing.show();
+            });
+            
+            JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+            topBar.setOpaque(false);
+            topBar.add(backButton);
+            root.add(topBar);
+            root.add(Box.createVerticalStrut(10));
 
             /* === 1. CHART TOGGLE BUTTON === */
             JPanel togglePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -327,7 +348,7 @@ class TechGrowthDashboard extends JPanel {
             masterScroll.setBorder(null);
 
             f.setContentPane(masterScroll);
-           // f.setSize(1000, 800);
+            // f.setSize(1000, 800);
             f.setExtendedState(JFrame.MAXIMIZED_BOTH);
             f.setLocationRelativeTo(null);
             f.setVisible(true);
@@ -433,6 +454,15 @@ class TechGrowthDashboard extends JPanel {
                 new Font("Segoe UI", Font.BOLD, 20), ACCENT));  // Reduced from 22 to 20
 
         /* chat history */
+        // DS/DBMS data structures
+        Queue<String> chatHistory = new LinkedList<>();   // Queue for storing history
+        Stack<String> undoStack = new Stack<>();          // Stack for undo feature
+        HashMap<String, String> faqMap = new HashMap<>(); // HashMap for quick replies
+        faqMap.put("hello", "Hi there! How can I help you?");
+        faqMap.put("bye", "Goodbye! Have a great day!");
+        faqMap.put("what is ds", "Data Structures organize data for efficient access.");
+        faqMap.put("what is dbms", "DBMS manages and stores structured data safely.");
+
         JTextArea chatArea = new JTextArea("Hi dear learner! I'm your AI mentor. How can I help?");
         chatArea.setEditable(false);
         chatArea.setLineWrap(true);
@@ -448,16 +478,16 @@ class TechGrowthDashboard extends JPanel {
         /* bottom input bar */
         JTextField input = new JTextField("Type here…");
         JButton sendBtn = new JButton("Send");
-        input.setForeground(Color.GRAY);
+        input.setForeground(Color.BLACK);
         input.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 if (input.getText().equals("Type here…")) input.setText("");
-                input.setForeground(TEXT);
+                input.setForeground(Color.BLACK);
             }
             public void focusLost(FocusEvent e) {
                 if (input.getText().isEmpty()) {
                     input.setText("Type here…");
-                    input.setForeground(Color.BLACK);
+                    input.setForeground(Color.GRAY);
                 }
             }
         });
@@ -534,13 +564,13 @@ class TechGrowthDashboard extends JPanel {
         }
         Mentor[] mentors = {
                 new Mentor("Ankur Patel", "Java developer", "https://www.linkedin.com/in/ankur-patel-6b2340275/"),
-        new Mentor("Hardik shah", "AI specialist", "https://www.linkedin.com/in/erhardikshah/"),
-         new Mentor("Mosam Pandya","AI/ML","https://www.linkedin.com/in/mosampandya/"),
+                new Mentor("Hardik shah", "AI specialist", "https://www.linkedin.com/in/erhardikshah/"),
+                new Mentor("Mosam Pandya","AI/ML","https://www.linkedin.com/in/mosampandya/"),
                 new Mentor("Jinal Zala","DSA java","https://www.linkedin.com/in/jinal-zala-a1479a1a5/"),
                 new Mentor("Dr.Kamaldeep bhatia","Internet of Things","https://www.linkedin.com/in/dr-kamaldeep-bhatia-05482930b/"),
                 new Mentor("Nimesh Das","python developer","https://www.linkedin.com/in/nimish-das-23489375/")
 
-};
+        };
 
 
         for (Mentor m : mentors) {
@@ -549,11 +579,8 @@ class TechGrowthDashboard extends JPanel {
             card.setBorder(new EmptyBorder(15, 15, 15, 15));  // Reduced from 15
 
 
-            ImageIcon icon = new ImageIcon(TechGrowthDashboard.class.getResource("/linkedin.png"));
-            Image scaled = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-            ImageIcon scaledIcon = new ImageIcon(scaled);
-
-            JLabel name = new JLabel(m.name, scaledIcon, JLabel.CENTER);
+            // Use text-based icon instead of missing image file
+            JLabel name = new JLabel("🔗 " + m.name, JLabel.CENTER);
 
 
             name.setFont(new Font("Segoe UI", Font.BOLD, 16));
